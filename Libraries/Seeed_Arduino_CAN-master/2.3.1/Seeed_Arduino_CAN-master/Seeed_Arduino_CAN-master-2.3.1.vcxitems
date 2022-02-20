@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding ="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >
+  <PropertyGroup Label="Globals" >
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{e2581314-29e7-431b-95fc-c4c66256b6e9}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\can-serial.cpp" />
+<ClCompile Include="$(MSBuildThisFileDirectory)src\mcp2515_can.cpp" />
+<ClCompile Include="$(MSBuildThisFileDirectory)src\mcp2518fd_can.cpp" />
+<ClCompile Include="$(MSBuildThisFileDirectory)src\mcp_can.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\can-serial.h" />
+<ClInclude Include="$(MSBuildThisFileDirectory)src\mcp2515_can.h" />
+<ClInclude Include="$(MSBuildThisFileDirectory)src\mcp2515_can_dfs.h" />
+<ClInclude Include="$(MSBuildThisFileDirectory)src\mcp2518fd_can.h" />
+<ClInclude Include="$(MSBuildThisFileDirectory)src\mcp2518fd_can_dfs.h" />
+<ClInclude Include="$(MSBuildThisFileDirectory)src\mcp_can.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="$(MSBuildThisFileDirectory)keywords.txt" />
+<Text Include="$(MSBuildThisFileDirectory)library.properties" />
+<Text Include="$(MSBuildThisFileDirectory)License.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)CODE_OF_CONDUCT.md" />
+<None Include="$(MSBuildThisFileDirectory)CONTRIBUTING.md" />
+<None Include="$(MSBuildThisFileDirectory)library.json" />
+<None Include="$(MSBuildThisFileDirectory)README.md" />
+  </ItemGroup>
+</Project>
