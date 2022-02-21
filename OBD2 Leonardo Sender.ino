@@ -26,8 +26,8 @@ MCP_CAN CAN0(17);                               // Set CS to pin 10
 void setup() {
   // Serial needs to be at least this speed otherwise line will be dropped
   Serial.begin(250000);
-  while (!Serial);
-  delay(10);
+  // while (!Serial);   // COmment out if Serial will not be used
+  delay(100);
   Serial.println("Single Can Bus Sender/Logger, 500kb/s...");
 
   // Initialize MCP2515 running at 8MHz with a baudrate of 500kb/s and the masks and filters disabled.
