@@ -21,5 +21,8 @@
     <ClInclude Include="__vm\.OBD2 Leonardo Sender.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="__vm\.OBD2-Leonardo-CAN-Bus-Board-Sender.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

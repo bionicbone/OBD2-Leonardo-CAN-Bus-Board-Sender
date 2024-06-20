@@ -95,6 +95,8 @@ void sendCan(MCP_CAN myCan, uint8_t MCP2515number) {
   // Create loop timer
   unsigned long timer = micros();
 
+  // This sends a data counter on ID 0x147 simply so I can see the Nano and HS CAN has active data
+  
   // Increase the counter
   dtaCounter++;
   if (dtaCounter == 1099511627775) dtaCounter = 0;
@@ -117,13 +119,33 @@ void sendCan(MCP_CAN myCan, uint8_t MCP2515number) {
   //Serial.print(" ");
   //Serial.print("00 00 08 ");
   //for (int i = 0; i <8; i++) {
-  //  Serial.print(dta[i]); Serial.print(" ");
+  //  Serial.print(dta[i],HEX); Serial.print(" ");
   //}
   //Serial.println("");
 
+  
+  // Send Clutch Pedal % = HS_0x117  100-(((D2 * 256 + D3) - 19563) / 8) - updated ~52ms
+  // Clutch Pedal % = 95
+  dta[7] = 0;
+  dta[6] = 0;
+  dta[5] = 0;
+  dta[4] = 0;
+  dta[3] = 0x63;
+  dta[2] = 0x4F;
+  dta[1] = 0;
+  dta[0] = 0;
+  myCan.sendMsgBuf(0x117, 0, 8, dta);
+  Serial.print("Sending: ");
+  Serial.print(0x0117, HEX);
+  Serial.print(" ");
+  Serial.print("00 00 08 ");
+  for (int i = 0; i <8; i++) {
+    Serial.print(dta[i], HEX); Serial.print(" ");
+  }
+  Serial.println("");
+  
+  
   // Delay loop
-
-
   // It should take around 222uS to send a packet, the Nano can not run fast enough
   //while (micros() - timer < 4000) {}
 
