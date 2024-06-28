@@ -15,6 +15,8 @@
 
 unsigned long upTimer = millis();
 unsigned long dtaCounter = 0;
+uint16_t clutchValue = 18543;
+bool clutchDirection = 0;
 
 #define CAN0_INT 7                              // Set INT to pin 2
 MCP_CAN CAN0(17);                               // Set CS to pin 10
@@ -93,7 +95,7 @@ void sendCan(MCP_CAN myCan, uint8_t MCP2515number) {
   unsigned char dta[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
   // Create loop timer
-  unsigned long timer = micros();
+  unsigned long timer = millis();
 
   // This sends a data counter on ID 0x147 simply so I can see the Nano and HS CAN has active data
   
@@ -124,16 +126,39 @@ void sendCan(MCP_CAN myCan, uint8_t MCP2515number) {
   //Serial.println("");
 
   
-  // Send Clutch Pedal % = HS_0x117  100-(((D2 * 256 + D3) - 19563) / 8) - updated ~52ms
-  // Clutch Pedal % = 95
+  // Send Clutch Pedal % = HS_0x117  (D2 (bits 0 & 1) * 256 + D3) / 1024 * 100 - updated ~52ms
+  // Clutch Pedal % = clutchValue
+
+  //Serial.print("clutchValue = "); Serial.println(clutchValue);
+  //Serial.print("clutchValue >> 8 = "); Serial.println(clutchValue >> 8);
+  //Serial.print("clutchValue & 0xFF = "); Serial.println(clutchValue >> clutchValue & 0xFF);
+
+  
   dta[7] = 0;
   dta[6] = 0;
   dta[5] = 0;
   dta[4] = 0;
-  dta[3] = 0x63;
-  dta[2] = 0x4F;
+  dta[3] = clutchValue & 0xFF;
+  dta[2] = clutchValue >> 8;
   dta[1] = 0;
   dta[0] = 0;
+
+  //Serial.print("Values "); Serial.print(dta[3],HEX); Serial.print(", "); Serial.println(dta[2], HEX);
+
+  //int reverseClutchValue = (((dta[3] & 0x03) * 256 + dta[2]));
+  //Serial.print("reverseClutchValue = "); Serial.println(reverseClutchValue);
+
+  //int reversedat3 = dta[3] & 0x03;
+  //Serial.print("reversedat3 = "); Serial.println(reversedat3);
+
+  //int reversedat2 = dta[2];
+  //Serial.print("reversedat2 = "); Serial.println(reversedat2);
+  //
+  //
+  //int reverseClutchPercentage = (((float)reversedat3 * 256 + (float)reversedat2) / 1024 * 100);
+  //Serial.print("reverseClutchPercentage = "); Serial.println(reverseClutchPercentage);
+  //Serial.println();
+
   myCan.sendMsgBuf(0x117, 0, 8, dta);
   Serial.print("Sending: ");
   Serial.print(0x0117, HEX);
@@ -143,11 +168,27 @@ void sendCan(MCP_CAN myCan, uint8_t MCP2515number) {
     Serial.print(dta[i], HEX); Serial.print(" ");
   }
   Serial.println("");
+
+  if (clutchDirection == 0) {
+    clutchValue++;
+  }
+  else {
+    clutchValue--;
+  }
+
+  if (clutchValue >= 19319) {
+    clutchValue = 19318;
+    clutchDirection = 1;
+  }
+  if (clutchValue <= 18543) {
+    clutchValue = 18544;
+    clutchDirection = 0;
+  }
   
   
   // Delay loop
   // It should take around 222uS to send a packet, the Nano can not run fast enough
-  //while (micros() - timer < 4000) {}
+  while (millis() - timer < 5) {}
 
   // report loop time - if its more than 4000uS then the nano took longer to send the data
   unsigned long loopTime = micros() - timer;
